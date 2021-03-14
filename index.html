@@ -48,7 +48,7 @@
       var endowmentColor = am4core.color("#1c5fe5");
     
       // for easier access by key (assign '.active' to variables)
-      var colors = { active: activeColor, pensionFund: pensionColor, SovereignWealthFund: sovereignColor, Endowment: endowmentColor };
+      var colors = { active: activeColor, ["Pension Fund"]: pensionColor, ["Sovereign Wealth Fund"]: sovereignColor, Endowment: endowmentColor };
     
       var countryColor = am4core.color("#3b3b3b");
       var countryStrokeColor = am4core.color("#000000");
@@ -73,20 +73,20 @@
       // PREPARE DATA
       //////////////////////////////////////////////////////////////////////////////
     
-      // make a map of country indexes for later use
+      // make a map of country indexes for later use: {BR: 0, CA: 1, CN: 2, US: 3}
       var countryIndexMap = {};
       var list = investors_WORLD_timeline[investors_WORLD_timeline.length - 1].list;
       for (var i = 0; i < list.length; i++) {
         var country = list[i]
-        countryIndexMap[country.id] = i;
-        console.log("countryIndexMap: ", countryIndexMap)
+        countryIndexMap[country.id] = i;        
       }
+      // console.log('countryIndexMap: ', countryIndexMap)
     
       //  total companies in TOTAL data 
       for (var i = 0; i < investors_TOTAL_timeline.length; i++) {
         var totalCompanies = investors_TOTAL_timeline[i]
-        totalCompanies.active = totalCompanies.pensionFund + totalCompanies.SovereignWealthFund + totalCompanies.Endowment
-        console.log("totalCompanies", totalCompanies)
+        totalCompanies.active = totalCompanies["Pension Fund"] + totalCompanies["Sovereign Wealth Fund"] + totalCompanies.Endowment
+        // console.log("totalCompanies", totalCompanies)
       }
 
       // function that returns current slide
@@ -96,7 +96,7 @@
           index = investors_WORLD_timeline.length - 1;
         }    
         var data = investors_WORLD_timeline[index];
-        // console.log(data)
+        // console.log('data: ', data)
         // Convert country IDs to names
         for (var i = 0; i < data.list.length; i++) {
           data.list[i].name = idToName(data.list[i].id);
@@ -106,33 +106,36 @@
     
       // get slide data
       var slideData = getSlideData();
-    
+      // console.log('slideData: ', slideData)
+
       // as we will be modifying raw data, make a copy
       var mapData = JSON.parse(JSON.stringify(slideData.list));
-    
+      // console.log('mapData: ', mapData)
+
       // remove items with 0 values for better performance
       for(var i = mapData.length - 1; i >= 0; i--){
-        if(mapData[i].pensionFund == 0){
+        if(mapData[i]["Pension Fund"] == 0){
           mapData.splice(i, 1);
         }
-      }       
+      }  
+           
       // Per Capita calculations
-      var max = { pensionFund: 0, SovereignWealthFund: 0, Endowment: 0 };
-      var maxPC = { pensionFund: 0, SovereignWealthFund: 0, Endowment: 0, active: 0 };
+      var max = { ["Pension Fund"]: 0, ["Sovereign Wealth Fund"]: 0, Endowment: 0 };
+      var maxPC = { ["Pension Fund"]: 0, ["Sovereign Wealth Fund"]: 0, Endowment: 0, active: 0 };
     
       // the last day will have most
       for (var i = 0; i < mapData.length; i++) {
         var totalCompanies = mapData[i];
-        if (totalCompanies.pensionFund > max.pensionFund) {
-          max.pensionFund = totalCompanies.pensionFund;
+        if (totalCompanies["Pension Fund"] > max["Pension Fund"]) {
+          max["Pension Fund"] = totalCompanies["Pension Fund"];
         }
-        if (totalCompanies.SovereignWealthFund > max.SovereignWealthFund) {
-          max.SovereignWealthFund = totalCompanies.SovereignWealthFund;
+        if (totalCompanies["Sovereign Wealth Fund"] > max["Sovereign Wealth Fund"]) {
+          max["Sovereign Wealth Fund"] = totalCompanies["Sovereign Wealth Fund"];
         }
         if (totalCompanies.Endowment > max.Endowment) {
           max.Endowment = totalCompanies.Endowment
         }
-        max.active = max.pensionFund;
+        max.active = max["Pension Fund"];
       }
     
       // END OF DATA
@@ -237,7 +240,7 @@
       var bubbleSeries = mapChart.series.push(new am4maps.MapImageSeries());  
       bubbleSeries.data = JSON.parse(JSON.stringify(mapData));
     
-      bubbleSeries.dataFields.value = "pensionFund";
+      bubbleSeries.dataFields.value = "Pension Fund";
       bubbleSeries.dataFields.id = "id";
     
       // adjust tooltip
@@ -326,9 +329,8 @@
           target.disabled = true;
         }
         return longitude;
-      })
-    
-      // END OF MAP  
+      })    
+      //======== END OF MAP ========//
     
       // top title
       var title = mapChart.titles.create();
@@ -349,8 +351,7 @@
       mapGlobeSwitch.leftLabel.fill = am4core.color("#ffffff");
       mapGlobeSwitch.rightLabel.fill = am4core.color("#ffffff");
       mapGlobeSwitch.rightLabel.text = "Globe";
-      mapGlobeSwitch.verticalCenter = "top";
-    
+      mapGlobeSwitch.verticalCenter = "top";    
     
       mapGlobeSwitch.events.on("toggled", function() {
         if (mapGlobeSwitch.isActive) {
@@ -469,8 +470,7 @@
       slider.marginRight = 35;
       slider.height = 15;
       slider.start = 1;
-    
-    
+        
       // what to do when slider is dragged
       slider.events.on("rangechanged", function(event) {
         var index = Math.round((investors_WORLD_timeline.length - 1) * slider.start);
@@ -501,8 +501,7 @@
       slider.startGrip.background.strokeOpacity = 0;
       slider.startGrip.icon.stroke = am4core.color("#ffffff");
       slider.startGrip.background.states.copyFrom(playButton.background.states)
-    
-    
+        
       // bubble size slider
       var sizeSlider = container.createChild(am4core.Slider);
       sizeSlider.orientation = "vertical";
@@ -524,8 +523,7 @@
       sizeSlider.startGrip.background.states.getKey("hover").properties.fill = activeColor;
       sizeSlider.startGrip.background.states.getKey("down").properties.fill = activeColor;
       sizeSlider.horizontalCenter = "middle";
-    
-    
+        
       sizeSlider.events.on("rangechanged", function() {
         sizeSlider.startGrip.scale = 0.75 + sizeSlider.start;
         bubbleSeries.heatRules.getIndex(0).max = 30 + sizeSlider.start * 100;
@@ -533,8 +531,7 @@
           clone.radius = clone.radius;
         })
       })
-    
-    
+        
       var sizeLabel = container.createChild(am4core.Label);
       sizeLabel.text = "max bubble size *";
       sizeLabel.fill = am4core.color("#ffffff");
@@ -578,8 +575,7 @@
       filterSlider.startGrip.background.states.getKey("down").properties.fill = activeColor;
       filterSlider.horizontalCenter = "middle";
       filterSlider.start = 1;
-    
-    
+        
       filterSlider.events.on("rangechanged", function() {
         var maxValue = max[currentType] * filterSlider.start + 1;
         if (!isNaN(maxValue) && bubbleSeries.inited) {
@@ -595,8 +591,7 @@
           })
         }
       })
-    
-    
+        
       var filterLabel = container.createChild(am4core.Label);
       filterLabel.text = "filter max values *";
       filterLabel.rotation = 90;
@@ -614,9 +609,7 @@
     
       filterLabel.adapter.add("y", function(y, target) {
         return container.pixelHeight * (1 - buttonsAndChartContainer.percentHeight / 100) * 0.7;
-      })
-    
-    
+      })   
     
       // play behavior
       function play() {
@@ -735,8 +728,7 @@
         setTimeout(function() {
           legendDown = false;
         }, 100)
-      })
-    
+      })    
     
       var seriesTypeSwitch = lineChart.legend.createChild(am4core.SwitchButton);
       seriesTypeSwitch.leftLabel.text = "totals";
@@ -797,8 +789,7 @@
             column.strokeOpacity = 0;
           }
         })
-      }
-    
+      }    
     
       // create series
       var activeSeries = addSeries("active", activeColor);
@@ -806,11 +797,11 @@
       activeSeries.tooltip.disabled = true;
       activeSeries.hidden = false;
     
-      var pensionSeries = addSeries("pensionFund", pensionColor); // NAME ON LINE CHART
-      var sovereignSeries = addSeries("SovereignWealthFund", sovereignColor);
+      var pensionSeries = addSeries("Pension Fund", pensionColor); // NAME ON LINE CHART
+      var sovereignSeries = addSeries("Sovereign Wealth Fund", sovereignColor);
       var endowmentSeries = addSeries("Endowment", endowmentColor);
     
-      var series = { active: activeSeries, pensionFund: pensionSeries, SovereignWealthFund: sovereignSeries, Endowment: endowmentSeries };
+      var series = { active: activeSeries, "Pension Fund": pensionSeries, "Sovereign Wealth Fund": sovereignSeries, Endowment: endowmentSeries };
       // add series
       function addSeries(name, color) {
         var series = lineChart.series.push(new am4charts.LineSeries())
@@ -823,8 +814,7 @@
         series.maskBullets = false;
         series.minBulletDistance = 10;
         series.hidden = true;
-        series.hideTooltipWhileZooming = true;
-    
+        series.hideTooltipWhileZooming = true;    
     
         // series bullet
         var bullet = series.bullets.push(new am4charts.CircleBullet());
@@ -853,10 +843,9 @@
         series.tooltipText = "Total {name}: {valueY}";
     
         return series;
-      }
+      }   
     
-    
-      var series = { active: activeSeries, pensionFund: pensionSeries, SovereignWealthFund: sovereignSeries, Endowment: endowmentSeries };
+      var series = { active: activeSeries, ["Pension Fund"]: pensionSeries, ["Sovereign Wealth Fund"]: sovereignSeries, Endowment: endowmentSeries };
     
       var columnSeries;
     
@@ -867,8 +856,8 @@
           updateColumnsFill();
         })
     
-        columnSeries.pensionFund = addColumnSeries("pensionFund", pensionColor);
-        columnSeries.SovereignWealthFund = addColumnSeries("SovereignWealthFund", sovereignColor);
+        columnSeries["Pension Fund"] = addColumnSeries("Pension Fund", pensionColor);
+        columnSeries["Sovereign Wealth Fund"] = addColumnSeries("Sovereign Wealth Fund", sovereignColor);
         columnSeries.Endowment = addColumnSeries("Endowment", endowmentColor);
       }
     
@@ -920,12 +909,12 @@
     
       // BUTTONS
       // create buttons
-      var activeButton = addButton("active", activeColor);
-      var pensionButton = addButton("pensionFund", pensionColor);
-      var sovereignButton = addButton("SovereignWealthFund", sovereignColor);
+      var activeButton = addButton("Total Fund", activeColor);
+      var pensionButton = addButton("Pension Fund", pensionColor);
+      var sovereignButton = addButton("Sovereign Wealth Fund", sovereignColor);
       var endowmentButton = addButton("Endowment", endowmentColor);
     
-      var buttons = { active: activeButton, pensionFund: pensionButton, SovereignWealthFund: sovereignButton, Endowment: endowmentButton };
+      var buttons = { "active": activeButton, "Pension Fund": pensionButton, "Sovereign Wealth Fund": sovereignButton, Endowment: endowmentButton };
     
       // add button
       function addButton(name, color) {
@@ -1002,8 +991,7 @@
         polygonSeries.dataItems.each(function(dataItem) {
           dataItem.setValue("value", dataItem.dataContext[currentType + "PC"]);
           dataItem.mapPolygon.defaultState.properties.fill = undefined;
-        })
-    
+        })    
     
         // change color of bubbles
         // setting colors on mapImage for tooltip colors
@@ -1079,8 +1067,7 @@
         }, 1000); // you can adjust number, 1000 is one second
     
         updateTotals(currentIndex);
-        updateCountryName();
-        
+        updateCountryName();        
     
         mapPolygon.isActive = true;
         // meaning it's globe
@@ -1099,8 +1086,6 @@
           mapChart.zoomToMapObject(mapPolygon, getZoomLevel(mapPolygon));
         }
       }
-
-
     
       // SHOW SELECTED COUNTRY DATA IN LINE CHART   
       function setCountryData(countryIndex) {
@@ -1111,16 +1096,16 @@
           var countryData = totalCompanies[countryIndex];
           var dataContext = lineChart.data[i];
           if (countryData) {
-            dataContext.SovereignWealthFund = countryData.SovereignWealthFund;
-            dataContext.pensionFund = countryData.pensionFund;
+            dataContext["Sovereign Wealth Fund"] = countryData["Sovereign Wealth Fund"];
+            dataContext["Pension Fund"] = countryData["Pension Fund"];
             dataContext.Endowment = countryData.Endowment;
-            dataContext.active = countryData.pensionFund + countryData.SovereignWealthFund + countryData.Endowment;
+            dataContext.active = countryData["Pension Fund"] + countryData["Sovereign Wealth Fund"] + countryData.Endowment;
             valueAxis.min = undefined;
             valueAxis.max = undefined;
           }
           else {
-            dataContext.SovereignWealthFund = 0;
-            dataContext.pensionFund = 0;
+            dataContext["Sovereign Wealth Fund"] = 0;
+            dataContext["Pension Fund"] = 0;
             dataContext.Endowment = 0;
             dataContext.active = 0;
             valueAxis.min = 0;
@@ -1208,10 +1193,10 @@
           var totalCompanies = investors_TOTAL_timeline[i];
           var dataContext = lineChart.data[i];
     
-          dataContext.SovereignWealthFund = totalCompanies.SovereignWealthFund;
-          dataContext.pensionFund = totalCompanies.pensionFund;
+          dataContext["Sovereign Wealth Fund"] = totalCompanies["Sovereign Wealth Fund"];
+          dataContext["Pension Fund"] = totalCompanies["Pension Fund"];
           dataContext.Endowment = totalCompanies.Endowment;
-          dataContext.active = totalCompanies.pensionFund + totalCompanies.SovereignWealthFund + totalCompanies.Endowment;
+          dataContext.active = totalCompanies["Pension Fund"] + totalCompanies["Sovereign Wealth Fund"] + totalCompanies.Endowment;
           valueAxis.min = undefined;
           valueAxis.max = undefined;
         }
@@ -1257,13 +1242,13 @@
       function updateMapData(data) {
         //modifying instead of setting new data for a nice animation
         bubbleSeries.dataItems.each(function(dataItem) {
-          dataItem.dataContext.pensionFund = 0;
+          dataItem.dataContext["Pension Fund"] = 0;
           dataItem.dataContext.Endowment = 0;
-          dataItem.dataContext.SovereignWealthFund = 0;
+          dataItem.dataContext["Sovereign Wealth Fund"] = 0;
           dataItem.dataContext.active = 0;
         })
     
-        maxPC = { active: 0, pensionFund: 0, Endowment: 0, SovereignWealthFund: 0 };
+        maxPC = { active: 0, ["Pension Fund"]: 0, Endowment: 0, ["Sovereign Wealth Fund"]: 0 };
     
         for (var i = 0; i < data.length; i++) {
           var totalCompanies = data[i];
@@ -1271,30 +1256,29 @@
           var polygon = polygonSeries.getPolygonById(totalCompanies.id);
     
           if (image) {
-            var population = Number(populations[image.dataItem.dataContext.id]);
-    
-            image.dataItem.dataContext.pensionFund = totalCompanies.pensionFund;
+            var population = Number(populations[image.dataItem.dataContext.id]);    
+            image.dataItem.dataContext["Pension Fund"] = totalCompanies["Pension Fund"];
             image.dataItem.dataContext.Endowment = totalCompanies.Endowment;
-            image.dataItem.dataContext.SovereignWealthFund = totalCompanies.SovereignWealthFund;
-            image.dataItem.dataContext.active = totalCompanies.pensionFund + totalCompanies.SovereignWealthFund + totalCompanies.Endowment;
+            image.dataItem.dataContext["Sovereign Wealth Fund"] = totalCompanies["Sovereign Wealth Fund"];
+            image.dataItem.dataContext.active = totalCompanies["Pension Fund"] + totalCompanies["Sovereign Wealth Fund"] + totalCompanies.Endowment;
           }
     
           if (polygon) {
-            polygon.dataItem.dataContext.pensionPC = totalCompanies.pensionFund / population * 1000000;
+            polygon.dataItem.dataContext.pensionPC = totalCompanies["Pension Fund"] / population * 1000000;
             polygon.dataItem.dataContext.endowmentPC = totalCompanies.Endowment / population * 1000000;
-            polygon.dataItem.dataContext.sovereignPC = totalCompanies.SovereignWealthFund / population * 1000000;
-            polygon.dataItem.dataContext.active = totalCompanies.pensionFund + totalCompanies.SovereignWealthFund + totalCompanies.Endowment;
+            polygon.dataItem.dataContext.sovereignPC = totalCompanies["Sovereign Wealth Fund"] / population * 1000000;
+            polygon.dataItem.dataContext.active = totalCompanies["Pension Fund"] + totalCompanies["Sovereign Wealth Fund"] + totalCompanies.Endowment;
             polygon.dataItem.dataContext.activePC = polygon.dataItem.dataContext.active / population * 1000000;
     
             if (population > 100000) {
-              if (polygon.dataItem.dataContext.pensionPC > maxPC.pensionFund) {
-                maxPC.pensionFund = polygon.dataItem.dataContext.pensionPC;
+              if (polygon.dataItem.dataContext.pensionPC > maxPC["Pension Fund"]) {
+                maxPC["Pension Fund"] = polygon.dataItem.dataContext.pensionPC;
               }
               if (polygon.dataItem.dataContext.endowmentPC > maxPC.Endowment) {
                 maxPC.Endowment = polygon.dataItem.dataContext.endowmentPC;
               }
-              if (polygon.dataItem.dataContext.sovereignPC > maxPC.SovereignWealthFund) {
-                maxPC.SovereignWealthFund = polygon.dataItem.dataContext.sovereignPC;
+              if (polygon.dataItem.dataContext.sovereignPC > maxPC["Sovereign Wealth Fund"]) {
+                maxPC["Sovereign Wealth Fund"] = polygon.dataItem.dataContext.sovereignPC;
               }
               if (polygon.dataItem.dataContext.activePC > maxPC.active) {
                 maxPC.active = polygon.dataItem.dataContext.activePC;
@@ -1358,8 +1342,8 @@
     
       // INITIALISE COMPONENTS - set initial data and names
       updateCountryName(); // TITLE/DATE BOTTOM LEFT
-      changeDataType("active");  // TOGGLE ACTIVE BUTTON
-      populateCountries(slideData.list); // UPDATE THE DATA TABLE
+      changeDataType("active");  
+      populateCountries(slideData.list); 
     
       setTimeout(updateSeriesTooltip, 3000);
     
@@ -1420,7 +1404,7 @@
           .draw();
       } //========== END populateCountries ==========//   
 
-      //========== populateCompanies ==========//  
+      //========== START populateCompanies ==========//  
       function populateCompanies() {          
         $("#areas").DataTable().clear().destroy()
         var table = $("#areas tbody");
@@ -1463,7 +1447,7 @@
         }
       }
     
-    // Population data from AMCharts
+      // Population data from AMCharts
       var populations = {
         "AD": "84000",
         "AE": "4975593",
@@ -1718,9 +1702,8 @@
         "ZM": "13460305",
         "ZW": "13061000"
       }
-    }); 
-    
-    
+      }); 
+
     }); // END am4core.ready()
     </script>
 

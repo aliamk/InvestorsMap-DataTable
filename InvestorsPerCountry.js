@@ -1,47 +1,55 @@
 
-//[{"date":"2020-01-22","list":[{"confirmed":0,"deaths":0,"recovered":0,"id":"TV"}]
+/*[
+    {
+        "date":"2020-01-22",
+        "list":[
+            {"confirmed":0,"deaths":0,"recovered":0,"id":"TV"}
+        ] 
+    }
+]*/
+
 const investors_WORLD_timeline = [
     {
         "date":"2020-01-22",
         "list":[
-            {"totalCompanies":150, "pensionFund":120,"SovereignWealthFund":10, "Endowment":20, "id":"BR"},
-            {"totalCompanies":1060, "pensionFund":1000,"SovereignWealthFund":50, "Endowment":10, "id":"CA"},
-            {"totalCompanies":1310, "pensionFund":1020,"SovereignWealthFund":250, "Endowment":40, "id":"CN"},
-            {"totalCompanies":3050, "pensionFund":2500,"SovereignWealthFund":500, "Endowment":50, "id":"US"} 
+            {"totalCompanies":150, "Pension Fund":120,"Sovereign Wealth Fund":10, "Endowment":20, "id":"BR"},
+            {"totalCompanies":1060, "Pension Fund":1000,"Sovereign Wealth Fund":50, "Endowment":10, "id":"CA"},
+            {"totalCompanies":1310, "Pension Fund":1020,"Sovereign Wealth Fund":250, "Endowment":40, "id":"CN"},
+            {"totalCompanies":3050, "Pension Fund":2500,"Sovereign Wealth Fund":500, "Endowment":50, "id":"US"} 
         ]
     },{
         "date":"2020-04-22",
         "list":[
-            {"totalCompanies":253, "pensionFund":210,"SovereignWealthFund":18, "Endowment":25, "id":"BR"},
-            {"totalCompanies":1229, "pensionFund":1100, "SovereignWealthFund":77, "Endowment":52, "id":"CA"},
-            {"totalCompanies":1410, "pensionFund":1050,"SovereignWealthFund":300, "Endowment":60, "id":"CN"},
-            {"totalCompanies":3665, "pensionFund":2800, "SovereignWealthFund":800, "Endowment":65, "id":"US"}            
+            {"totalCompanies":253, "Pension Fund":210,"Sovereign Wealth Fund":18, "Endowment":25, "id":"BR"},
+            {"totalCompanies":1229, "Pension Fund":1100, "Sovereign Wealth Fund":77, "Endowment":52, "id":"CA"},
+            {"totalCompanies":1410, "Pension Fund":1050,"Sovereign Wealth Fund":300, "Endowment":60, "id":"CN"},
+            {"totalCompanies":3665, "Pension Fund":2800, "Sovereign Wealth Fund":800, "Endowment":65, "id":"US"}            
         ]
     },{
         "date":"2020-10-22",
         "list":[
-            {"totalCompanies":270, "pensionFund":220,"SovereignWealthFund":20, "Endowment":30, "id":"BR"},
-            {"totalCompanies":1340, "pensionFund":1200, "SovereignWealthFund":80, "Endowment":60, "id":"CA"},
-            {"totalCompanies":2340, "pensionFund":1850,"SovereignWealthFund":410, "Endowment":80, "id":"CN"},
-            {"totalCompanies":3170, "pensionFund":2600, "SovereignWealthFund":500, "Endowment":70, "id":"US"}            
+            {"totalCompanies":270, "Pension Fund":220,"Sovereign Wealth Fund":20, "Endowment":30, "id":"BR"},
+            {"totalCompanies":1340, "Pension Fund":1200, "Sovereign Wealth Fund":80, "Endowment":60, "id":"CA"},
+            {"totalCompanies":2340, "Pension Fund":1850,"Sovereign Wealth Fund":410, "Endowment":80, "id":"CN"},
+            {"totalCompanies":3170, "Pension Fund":2600, "Sovereign Wealth Fund":500, "Endowment":70, "id":"US"}            
         ]
     },{
         "date":"2021-01-22",
         "list":[
-            {"totalCompanies":390, "pensionFund":320,"SovereignWealthFund":30, "Endowment":40, "id":"BR"},
-            {"totalCompanies":1905, "pensionFund":1200, "SovereignWealthFund":100, "Endowment":605, "id":"CA"},
-            {"totalCompanies":3412, "pensionFund":2850,"SovereignWealthFund":480, "Endowment":82, "id":"CN"},
-            {"totalCompanies":5695, "pensionFund":5000, "SovereignWealthFund":600, "Endowment":95, "id":"US"}            
+            {"totalCompanies":390, "Pension Fund":320,"Sovereign Wealth Fund":30, "Endowment":40, "id":"BR"},
+            {"totalCompanies":1905, "Pension Fund":1200, "Sovereign Wealth Fund":100, "Endowment":605, "id":"CA"},
+            {"totalCompanies":3412, "Pension Fund":2850,"Sovereign Wealth Fund":480, "Endowment":82, "id":"CN"},
+            {"totalCompanies":5695, "Pension Fund":5000, "Sovereign Wealth Fund":600, "Endowment":95, "id":"US"}            
         ]
     }
 ]
 
 // [{"confirmed":557,"deaths":17,"recovered":30,"date":"2020-01-22"}, {"confirmed":96594427,"deaths":2067611,"recovered":53241716,"date":"2021-01-20"}]
 const investors_TOTAL_timeline = [
-    { "pensionFund":4640, "SovereignWealthFund":810, "Endowment":120, "date":"2020-01-22"},
-    { "pensionFund":5160, "SovereignWealthFund":1195, "Endowment":202, "date":"2020-04-22"},
-    { "pensionFund":5870, "SovereignWealthFund":1010, "Endowment":240, "date":"2020-10-22"},
-    { "pensionFund":9370, "SovereignWealthFund":1210, "Endowment":822, "date":"2021-01-22"}
+    { "Pension Fund":4640, "Sovereign Wealth Fund":810, "Endowment":120, "date":"2020-01-22"},
+    { "Pension Fund":5160, "Sovereign Wealth Fund":1195, "Endowment":202, "date":"2020-04-22"},
+    { "Pension Fund":5870, "Sovereign Wealth Fund":1010, "Endowment":240, "date":"2020-10-22"},
+    { "Pension Fund":9370, "Sovereign Wealth Fund":1210, "Endowment":822, "date":"2021-01-22"}
 ] // Total companies in world: 11402
 
 const LP_Company_Domicile = [    
